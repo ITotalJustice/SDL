@@ -216,7 +216,22 @@ aaudio_PlayDevice(_THIS)
     int64_t timeoutNanoseconds = 1 * 1000 * 1000; /* 8 ms */
     res = ctx.AAudioStream_write(private->stream,  private->mixbuf, private->mixlen / private->frame_size, timeoutNanoseconds);
     if (res < 0) {
+        // this is a hacky way to get headphones to work on android
+        // a new audio stream needs to be opened if a headphones are
+        // connected / disconnected.
+        // however, not sure where best to do this in the code.
+        // so for now, this works (and leaks mem, but not much).
+        // SEE: https://github.com/libsdl-org/SDL/issues/4985
+        if (res == AAUDIO_ERROR_DISCONNECTED) {
+            ctx.AAudioStreamBuilder_openStream(ctx.builder, &private->stream); // reopen stream (mem leak probably)
+            ctx.AAudioStream_requestStart(private->stream); // start new stream
+            res = ctx.AAudioStream_write(private->stream,  private->mixbuf, private->mixlen / private->frame_size, timeoutNanoseconds);
+        }
         LOGI("%s : %s", __func__, ctx.AAudio_convertResultToText(res));
+    }
+
+    if (res < 0) {
+       LOGI("%s : %s", __func__, ctx.AAudio_convertResultToText(res));
     } else {
         LOGI("SDL AAudio play: %d frames, wanted:%d frames", (int)res, private->mixlen / private->frame_size);
     }
