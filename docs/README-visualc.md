@@ -1,7 +1,7 @@
 Using SDL with Microsoft Visual C++
 ===================================
 
-### by [Lion Kimbro](mailto:snowlion@sprynet.com) with additions by [James Turk](mailto:james@conceptofzero.net)
+### by Lion Kimbro with additions by James Turk
 
 You can either use the precompiled libraries from the [SDL](https://www.libsdl.org/download.php) web site, or you can build SDL
 yourself.
@@ -27,9 +27,9 @@ You may get a few warnings, but you should not get any errors.
 
 Later, we will refer to the following `.lib` and `.dll` files that have just been generated:
 
--   `./VisualC/Win32/Debug/SDL2.dll` or `./VisualC/Win32/Release/SDL2.dll`
--   `./VisualC/Win32/Debug/SDL2.lib` or `./VisualC/Win32/Release/SDL2.lib`
--   `./VisualC/Win32/Debug/SDL2main.lib` or `./VisualC/Win32/Release/SDL2main.lib`
+-   `./VisualC/Win32/Debug/SDL3.dll` or `./VisualC/Win32/Release/SDL3.dll`
+-   `./VisualC/Win32/Debug/SDL3.lib` or `./VisualC/Win32/Release/SDL3.lib`
+-   `./VisualC/Win32/Debug/SDL3_main.lib` or `./VisualC/Win32/Release/SDL3_main.lib`
 
 _Note for the `x64` versions, just replace `Win32` in the path with `x64`_
 
@@ -59,12 +59,12 @@ Now we're going to use the files that we had created earlier in the *Build SDL* 
 
 Copy the following file into your Project directory:
 
--   `SDL2.dll`
+-   `SDL3.dll`
 
 Add the following files to your project (It is not necessary to copy them to your project directory):
 
--   `SDL2.lib`
--   `SDL2main.lib`
+-   `SDL3.lib`
+-   `SDL3_main.lib`
 
 To add them to your project, right click on your project, and select
 `Add files to project`.
@@ -73,7 +73,7 @@ To add them to your project, right click on your project, and select
 and type the names of the libraries to link with in the "Additional Options:" box. Note: This must be done for each build configuration
 (e.g. Release,Debug).**
 
-### Hello SDL2
+### Hello SDL
 
 Here's a sample SDL snippet to verify everything is setup in your IDE:
 
@@ -88,8 +88,8 @@ Here's a sample SDL snippet to verify everything is setup in your IDE:
         SDL_Renderer* renderer = NULL;
 
         SDL_Init(SDL_INIT_VIDEO);
-        window = SDL_CreateWindow("SDL2 Test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
-        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+        window = SDL_CreateWindow("Hello SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
+        renderer = SDL_CreateRenderer(window, NULL, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
  
         SDL_DestroyRenderer(renderer);
         SDL_DestroyWindow(window);

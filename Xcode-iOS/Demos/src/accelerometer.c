@@ -127,7 +127,7 @@ initializeTextures(SDL_Renderer *renderer)
 
     /* create ship texture from surface */
     ship = SDL_CreateTextureFromSurface(renderer, bmp_surface);
-    if (ship == 0) {
+    if (ship == NULL) {
         fatalError("could not create ship texture");
     }
     SDL_SetTextureBlendMode(ship, SDL_BLENDMODE_BLEND);
@@ -145,7 +145,7 @@ initializeTextures(SDL_Renderer *renderer)
     }
     /* create space texture from surface */
     space = SDL_CreateTextureFromSurface(renderer, bmp_surface);
-    if (space == 0) {
+    if (space == NULL) {
         fatalError("could not create space texture");
     }
     SDL_FreeSurface(bmp_surface);
@@ -170,7 +170,7 @@ main(int argc, char *argv[])
 
     /* create main window and renderer */
     window = SDL_CreateWindow(NULL, 0, 0, 320, 480, SDL_WINDOW_FULLSCREEN | SDL_WINDOW_ALLOW_HIGHDPI);
-    renderer = SDL_CreateRenderer(window, 0, 0);
+    renderer = SDL_CreateRenderer(window, NULL, 0);
     
     SDL_GetWindowSize(window, &w, &h);
     SDL_RenderSetLogicalSize(renderer, w, h);

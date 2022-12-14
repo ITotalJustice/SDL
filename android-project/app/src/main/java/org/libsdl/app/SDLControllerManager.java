@@ -24,7 +24,7 @@ public class SDLControllerManager
     public static native int nativeAddJoystick(int device_id, String name, String desc,
                                                int vendor_id, int product_id,
                                                boolean is_accelerometer, int button_mask,
-                                               int naxes, int nhats, int nballs);
+                                               int naxes, int nhats);
     public static native int nativeRemoveJoystick(int device_id);
     public static native int nativeAddHaptic(int device_id, String name);
     public static native int nativeRemoveHaptic(int device_id);
@@ -210,7 +210,7 @@ class SDLJoystickHandler_API16 extends SDLJoystickHandler {
                     mJoysticks.add(joystick);
                     SDLControllerManager.nativeAddJoystick(joystick.device_id, joystick.name, joystick.desc,
                             getVendorId(joystickDevice), getProductId(joystickDevice), false,
-                            getButtonMask(joystickDevice), joystick.axes.size(), joystick.hats.size()/2, 0);
+                            getButtonMask(joystickDevice), joystick.axes.size(), joystick.hats.size()/2);
                 }
             }
         }
@@ -255,23 +255,21 @@ class SDLJoystickHandler_API16 extends SDLJoystickHandler {
 
     @Override
     public boolean handleMotionEvent(MotionEvent event) {
-        if ((event.getSource() & InputDevice.SOURCE_JOYSTICK) != 0) {
-            int actionPointerIndex = event.getActionIndex();
-            int action = event.getActionMasked();
-            if (action == MotionEvent.ACTION_MOVE) {
-                SDLJoystick joystick = getJoystick(event.getDeviceId());
-                if (joystick != null) {
-                    for (int i = 0; i < joystick.axes.size(); i++) {
-                        InputDevice.MotionRange range = joystick.axes.get(i);
-                        /* Normalize the value to -1...1 */
-                        float value = (event.getAxisValue(range.getAxis(), actionPointerIndex) - range.getMin()) / range.getRange() * 2.0f - 1.0f;
-                        SDLControllerManager.onNativeJoy(joystick.device_id, i, value);
-                    }
-                    for (int i = 0; i < joystick.hats.size() / 2; i++) {
-                        int hatX = Math.round(event.getAxisValue(joystick.hats.get(2 * i).getAxis(), actionPointerIndex));
-                        int hatY = Math.round(event.getAxisValue(joystick.hats.get(2 * i + 1).getAxis(), actionPointerIndex));
-                        SDLControllerManager.onNativeHat(joystick.device_id, i, hatX, hatY);
-                    }
+        int actionPointerIndex = event.getActionIndex();
+        int action = event.getActionMasked();
+        if (action == MotionEvent.ACTION_MOVE) {
+            SDLJoystick joystick = getJoystick(event.getDeviceId());
+            if (joystick != null) {
+                for (int i = 0; i < joystick.axes.size(); i++) {
+                    InputDevice.MotionRange range = joystick.axes.get(i);
+                    /* Normalize the value to -1...1 */
+                    float value = (event.getAxisValue(range.getAxis(), actionPointerIndex) - range.getMin()) / range.getRange() * 2.0f - 1.0f;
+                    SDLControllerManager.onNativeJoy(joystick.device_id, i, value);
+                }
+                for (int i = 0; i < joystick.hats.size() / 2; i++) {
+                    int hatX = Math.round(event.getAxisValue(joystick.hats.get(2 * i).getAxis(), actionPointerIndex));
+                    int hatY = Math.round(event.getAxisValue(joystick.hats.get(2 * i + 1).getAxis(), actionPointerIndex));
+                    SDLControllerManager.onNativeHat(joystick.device_id, i, hatX, hatY);
                 }
             }
         }
@@ -562,8 +560,6 @@ class SDLGenericMotionListener_API12 implements View.OnGenericMotionListener {
 
         switch ( event.getSource() ) {
             case InputDevice.SOURCE_JOYSTICK:
-            case InputDevice.SOURCE_GAMEPAD:
-            case InputDevice.SOURCE_DPAD:
                 return SDLControllerManager.handleJoystickMotionEvent(event);
 
             case InputDevice.SOURCE_MOUSE:
@@ -693,8 +689,6 @@ class SDLGenericMotionListener_API26 extends SDLGenericMotionListener_API24 {
 
         switch ( event.getSource() ) {
             case InputDevice.SOURCE_JOYSTICK:
-            case InputDevice.SOURCE_GAMEPAD:
-            case InputDevice.SOURCE_DPAD:
                 return SDLControllerManager.handleJoystickMotionEvent(event);
 
             case InputDevice.SOURCE_MOUSE:

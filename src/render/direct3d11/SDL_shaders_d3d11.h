@@ -18,13 +18,15 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
-#include "../../SDL_internal.h"
+#include "SDL_internal.h"
 
 /* D3D11 shader implementation */
 
-typedef enum {
+typedef enum
+{
     SHADER_SOLID,
     SHADER_RGB,
+#if SDL_HAVE_YUV
     SHADER_YUV_JPEG,
     SHADER_YUV_BT601,
     SHADER_YUV_BT709,
@@ -34,6 +36,7 @@ typedef enum {
     SHADER_NV21_JPEG,
     SHADER_NV21_BT601,
     SHADER_NV21_BT709,
+#endif
     NUM_SHADERS
 } D3D11_Shader;
 

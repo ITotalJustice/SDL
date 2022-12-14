@@ -22,16 +22,18 @@
 #ifndef SDL_shaders_gl_h_
 #define SDL_shaders_gl_h_
 
-#include "../../SDL_internal.h"
+#include "SDL_internal.h"
 
 /* OpenGL shader implementation */
 
-typedef enum {
+typedef enum
+{
     SHADER_INVALID = -1,
     SHADER_NONE,
     SHADER_SOLID,
     SHADER_RGB,
     SHADER_RGBA,
+#if SDL_HAVE_YUV
     SHADER_YUV_JPEG,
     SHADER_YUV_BT601,
     SHADER_YUV_BT709,
@@ -43,12 +45,13 @@ typedef enum {
     SHADER_NV21_JPEG,
     SHADER_NV21_BT601,
     SHADER_NV21_BT709,
+#endif
     NUM_SHADERS
 } GL_Shader;
 
 typedef struct GL_ShaderContext GL_ShaderContext;
 
-extern GL_ShaderContext * GL_CreateShaderContext(void);
+extern GL_ShaderContext *GL_CreateShaderContext(void);
 extern void GL_SelectShader(GL_ShaderContext *ctx, GL_Shader shader);
 extern void GL_DestroyShaderContext(GL_ShaderContext *ctx);
 

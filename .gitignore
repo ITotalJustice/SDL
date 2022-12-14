@@ -6,15 +6,16 @@ config.status
 libtool
 Makefile
 Makefile.rules
-sdl2-config
-sdl2-config.cmake
-sdl2-config-version.cmake
-sdl2.pc
-SDL2.spec
+sdl3-config
+sdl3-config.cmake
+sdl3-config-version.cmake
+sdl3.pc
+SDL3.spec
 build
 gen
 Build
 buildbot
+/VERSION.txt
 
 *.so
 *.so.*
@@ -22,6 +23,7 @@ buildbot
 *.exe
 *.o
 *.obj
+*.res
 *.lib
 *.a
 *.la
@@ -43,7 +45,7 @@ CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 cmake_uninstall.cmake
-SDL2ConfigVersion.cmake
+SDL3ConfigVersion.cmake
 .ninja_*
 *.ninja
 
@@ -59,6 +61,11 @@ cmake-build-*
 .DS_Store
 xcuserdata
 *.xcworkspace
+
+# for QtCreator
+CMakeLists.txt.user
+build*/
+*.pro.user*
 
 # for Visual C++
 .vs
@@ -86,18 +93,11 @@ VisualC/tests/testscale/icon.bmp
 VisualC/tests/testscale/sample.bmp
 VisualC/tests/testsprite2/icon.bmp
 VisualC/tests/testyuv/testyuv.bmp
-VisualC/visualtest/icon.bmp
-VisualC/visualtest/testquit.actions
-VisualC/visualtest/testquit.config
-VisualC/visualtest/testquit.exe
-VisualC/visualtest/testquit.parameters
-VisualC/visualtest/testsprite2.exe
-VisualC/visualtest/testsprite2_sample.actions
-VisualC/visualtest/testsprite2_sample.config
-VisualC/visualtest/testsprite2_sample.parameters
+VisualC-GDK/**/Layout
 
 # for Android
 android-project/local.properties
+android-project/.gradle/
 
 test/checkkeys
 test/checkkeysthreads
@@ -169,6 +169,7 @@ test/testyuv
 test/torturethread
 
 builddir/
+!build-scripts/
 debian/*.debhelper.log
 debian/*.substvars
 debian/*.tar.gz

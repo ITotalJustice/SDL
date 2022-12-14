@@ -18,14 +18,8 @@
      misrepresented as being the original software.
   3. This notice may not be removed or altered from any source distribution.
 */
+#include "SDL_internal.h"
 
-#if defined(__clang_analyzer__) && !defined(SDL_DISABLE_ANALYZE_MACROS)
-#define SDL_DISABLE_ANALYZE_MACROS 1
-#endif
-
-#include "../SDL_internal.h"
-
-#include "SDL_stdinc.h"
 
 #if defined(HAVE_QSORT)
 void
@@ -414,7 +408,7 @@ static void qsort_nonaligned(void *base, size_t nmemb, size_t size,
   char *first,*last;
   char *pivot=malloc(size);
   size_t trunc=TRUNC_nonaligned*size;
-  assert(pivot!=0);
+  assert(pivot != NULL);
 
   first=(char*)base; last=first+(nmemb-1)*size;
 
@@ -445,7 +439,7 @@ static void qsort_aligned(void *base, size_t nmemb, size_t size,
   char *first,*last;
   char *pivot=malloc(size);
   size_t trunc=TRUNC_aligned*size;
-  assert(pivot!=0);
+  assert(pivot != NULL);
 
   first=(char*)base; last=first+(nmemb-1)*size;
 
@@ -475,7 +469,7 @@ static void qsort_words(void *base, size_t nmemb,
   int stacktop=0;
   char *first,*last;
   char *pivot=malloc(WORD_BYTES);
-  assert(pivot!=0);
+  assert(pivot != NULL);
 
   first=(char*)base; last=first+(nmemb-1)*WORD_BYTES;
 
@@ -533,6 +527,39 @@ extern void qsortG(void *base, size_t nmemb, size_t size,
 }
 
 #endif /* HAVE_QSORT */
+
+void *
+SDL_bsearch(const void *key, const void *base, size_t nmemb, size_t size, int (*compare)(const void *, const void *))
+{
+#if defined(HAVE_BSEARCH)
+    return bsearch(key, base, nmemb, size, compare);
+#else
+/* SDL's replacement:  Taken from the Public Domain C Library (PDCLib):
+   Permission is granted to use, modify, and / or redistribute at will.
+*/
+    const void *pivot;
+    size_t corr;
+    int rc;
+
+    while (nmemb) {
+        /* algorithm needs -1 correction if remaining elements are an even number. */
+        corr = nmemb % 2;
+        nmemb /= 2;
+        pivot = (const char *)base + (nmemb * size);
+        rc = compare(key, pivot);
+
+        if (rc > 0) {
+            base = (const char *)pivot + size;
+            /* applying correction */
+            nmemb -= (1 - corr);
+        } else if (rc == 0) {
+            return (void *)pivot;
+        }
+    }
+
+    return NULL;
+#endif /* HAVE_BSEARCH */
+}
 
 /* vi: set ts=4 sw=4 expandtab: */
 
